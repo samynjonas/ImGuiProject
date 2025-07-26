@@ -44,6 +44,7 @@ add_library(imgui_lib STATIC ${IMGUI_SOURCES})
 target_include_directories(imgui_lib PUBLIC
     ${imgui_SOURCE_DIR}
     ${imgui_SOURCE_DIR}/backends
+    ${glfw_SOURCE_DIR}/include
 )
 
 # --- Main Executable ---
