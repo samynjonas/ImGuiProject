@@ -1,32 +1,71 @@
-# Prerequisites
-*.d
+# CMake build directories
+/build/
+/build-*/
+/out/
+/CMakeFiles/
+/CMakeCache.txt
+/cmake_install.cmake
+/Makefile
+/.vs/
 
-# Compiled Object files
-*.slo
-*.lo
+# CMake's FetchContent cache
+/_deps/
+/build/
+/out/
+/external/
+
+# Visual Studio Code
+.vscode/
+
+# Executables and binary files
+*.exe
+*.out
+*.app
+*.dll
+*.so
+*.dylib
+
+# Object files
 *.o
 *.obj
+*.lo
 
 # Precompiled Headers
 *.gch
 *.pch
 
-# Compiled Dynamic libraries
-*.so
-*.dylib
-*.dll
-
-# Fortran module files
-*.mod
-*.smod
-
-# Compiled Static libraries
-*.lai
-*.la
-*.a
+# Static and dynamic libraries
 *.lib
+*.a
+*.la
+*.def
 
-# Executables
-*.exe
-*.out
-*.app
+# IDE files
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+*.opensdf
+*.VC.db
+*.VC.VC.opendb
+
+# Generated files
+*.moc
+*.qrc
+*.autosave
+moc_*
+ui_*
+qrc_*
+
+# Logs and misc
+*.log
+*.tmp
+*.swp
+*~
+
+# MacOS stuff
+.DS_Store
+
+# Windows thumbnails
+Thumbs.db
+ehthumbs.db
