@@ -23,6 +23,7 @@ namespace ImGui
 
 		private:
 			void DrawCenteredProgressBar(float value, const ImVec2& size);
+			void DrawMap(const ImVec2& size, float padding = 1.f);
 
 		private:
 			std::shared_ptr<::Telemetry::TelemetryReader> m_TelemetryReader;

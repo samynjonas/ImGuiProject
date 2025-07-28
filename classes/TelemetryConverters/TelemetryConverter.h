@@ -1,4 +1,5 @@
 #pragma once
+#include "Math/Vector.h"
 
 namespace Telemetry
 {
@@ -12,6 +13,11 @@ namespace Telemetry
 			float Brake{ 0.f };
 			float Steering{ 0.f };
 			int Gear{ 0 };
+
+			float LapPercentage{ 0.f };
+
+			Math::Vec2 Location{};
+			Math::Vec2 Origin{};
 		};
 
 		class TelemetryConverter

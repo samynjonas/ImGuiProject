@@ -3,6 +3,8 @@
 #include "TelemetryConverters/TelemetryReader.h"
 #include "imgui_internal.h"
 
+#include "Math/Vector.h"
+
 namespace ImGui
 {
 	namespace Telemetry
@@ -52,6 +54,28 @@ namespace ImGui
 		
 			int const gear = m_TelemetryReader->GetGear();
 			ImGui::Text("Gear: %d", gear);
+			
+			if (ImGui::Button("Set Origin from here"))
+			{
+				m_TelemetryReader->SetOriginFromCurrent();
+			}
+			
+			Math::Vec2 const actualLocation = m_TelemetryReader->GetActualLocation();
+			ImGui::Text("Actual Location: [%f;%f]", actualLocation.X, actualLocation.Y);
+		
+			Math::Vec2 const relativeLocation = m_TelemetryReader->GetRelativeLocation();
+			ImGui::Text("Relative Location: [%f;%f]", relativeLocation.X, relativeLocation.Y);
+
+			ImVec2 const contentPos = ImGui::GetCursorScreenPos();
+			ImVec2 scaledLocation = { relativeLocation.X / 100.f, relativeLocation.Y / 100.f};
+			ImGui::Text("Scaled Location: [%f;%f]", scaledLocation.x, scaledLocation.y);
+
+			ImGui::GetWindowDrawList()->AddCircleFilled({ scaledLocation.x + contentPos.x + 50.f, scaledLocation.y + contentPos.y + 50.f }, 5.f, IM_COL32(255, 0, 0, 255));
+			
+			float const lapPercentage = m_TelemetryReader->GetLapPercentage();
+			ImGui::ProgressBar(lapPercentage, ImVec2(200, 20), "LapPercentage");
+
+			DrawMap({ 350.f, 250.f }, 25.f);
 		}
 
 		void TelemetryWindow::DrawCenteredProgressBar(float value, const ImVec2& size)
@@ -86,5 +110,23 @@ namespace ImGui
 			// Draw progress portion
 			draw_list->AddRectFilled(bar_a, bar_b, ImGui::GetColorU32(ImGuiCol_PlotHistogram), 4.0f);
 		}
+	
+		void TelemetryWindow::DrawMap(const ImVec2& size, float padding)
+		{
+			ImVec2 windowPos = ImGui::GetWindowPos();
+			ImVec2 windowSize = ImGui::GetWindowSize();
+
+			// --- Top-right corner of ImGui window
+			ImVec2 const mapTopLeft = ImVec2(
+				windowPos.x + windowSize.x - size.x - padding,
+				windowPos.y + padding
+			);
+
+			// Draw the outer box (just for debug)
+			ImGui::GetForegroundDrawList()->AddRect(mapTopLeft,
+				ImVec2(mapTopLeft.x + size.x, mapTopLeft.y + size.y),
+				IM_COL32(255, 255, 255, 255), 0.0f, 0, 2.0f);
+		}
+
 	}
 }
