@@ -14,13 +14,11 @@ namespace Telemetry
 		, m_CurrentSteering(0.f)
 		, m_CurrentSpeedKmh(0.f)
 		, m_CurrentGear(0)
-		, m_CurrentLocation()
-		, m_OriginLocation()
 		, m_CurrentCompletedLaps(0)
-		, m_LastSectorTime(0)
-		, m_CurrentBestTime(0)
-		, m_CurrentTime(0)
-
+		, m_LastSectorTime(0.f)
+		, m_LapBestTime(0.f)
+		, m_LastLapTime(0.f)
+		, m_CurrentTime(0.f)
 	{
 		m_TelemetryWriter = std::make_unique<TelemetryWriter>();
 		m_TelemetryWriter->StartWriter();
@@ -44,6 +42,15 @@ namespace Telemetry
 			output = m_TelemetryConverter->GetOutput();
 		}
 
+		int const lastCompletedLaps = m_CurrentCompletedLaps;
+		m_CurrentCompletedLaps = output.CompletedLaps;
+
+		bool const startedNewLap = { m_CurrentCompletedLaps > lastCompletedLaps };
+		if (startedNewLap)
+		{
+			StartNewLap();
+		}
+
 		m_CurrentThrottle = output.Throttle;
 		m_CurrentBrake = output.Brake;
 		m_CurrentSteering = output.Steering;
@@ -51,22 +58,20 @@ namespace Telemetry
 		m_CurrentGear = output.Gear;
 		m_CurrentSpeedKmh = output.SpeedKmh;
 
-		m_CurrentLocation = output.Location;
-		m_OriginLocation = output.Origin;
-
 		m_LastLapPercentage = m_CurrentLapPercentage;
 		m_CurrentLapPercentage = output.LapPercentage;
-
-		m_CurrentCompletedLaps = output.CompletedLaps;
-		m_LastSectorTime = output.LastSectorTime;
-		m_CurrentBestTime = output.BestTime;
-		m_CurrentTime = output.CurrentTime;
+		
+		m_LastSectorTime = output.LastSectorTimeSeconds;
+		
+		m_LapBestTime = output.BestTimeSeconds;
+		m_LastLapTime = output.LastTimeSeconds;
+		m_CurrentTime = output.CurrentTimeSeconds;
 		
 		m_TelemetryWriter->TryToWrite(output);
 	}
 
-	void TelemetryReader::SetOriginFromCurrent()
+	void TelemetryReader::StartNewLap()
 	{
-		m_OriginLocation = m_CurrentLocation;
+		// Reset Per Lap Variables
 	}
 }

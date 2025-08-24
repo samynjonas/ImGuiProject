@@ -52,14 +52,12 @@ namespace Telemetry
 
 		float const time{ 0.f };
 		float const lapPercentage{ dataToWrite.LapPercentage };
-		float const positionX{ dataToWrite.Location.X };
-		float const positionY{ dataToWrite.Location.Y };
 		float const throttle{ dataToWrite.Throttle };
 		float const brake{ dataToWrite.Brake };
 		float const steering{ dataToWrite.Steering };
 
 		m_TelemetryLog << std::fixed << std::setprecision(4)
-			<< time << "," << lapPercentage << "," << positionX << "," << positionY << ","
+			<< time << "," << lapPercentage << ","
 			<< throttle << "," << brake << "," << steering << "\n";
 
 		return true;

@@ -12,18 +12,18 @@ namespace Telemetry
 			float Throttle{ 0.f };
 			float Brake{ 0.f };
 			float Steering{ 0.f };
-			int Gear{ 0 };
 
+			int Gear{ 0 };
 			float SpeedKmh{ 0.f };
 
 			float LapPercentage{ 0.f };
 			int CompletedLaps{ 0 };
-			int LastSectorTime{ 0 };
-			int BestTime{ 0 };
-			int CurrentTime{ 0 };
-
-			Math::Vec2 Location{};
-			Math::Vec2 Origin{};
+			float LastSectorTimeSeconds{ 0.f };
+			float LastTimeSeconds{ 0.f };
+			float BestTimeSeconds{ 0.f };
+			float CurrentTimeSeconds{ 0.f };
+		
+			int	TyresOutOfTrack{ 0 };
 		};
 
 		class TelemetryConverter

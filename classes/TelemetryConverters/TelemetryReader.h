@@ -35,35 +35,31 @@ namespace Telemetry
 		// returns the current speed in kmh
 		inline int GetSpeedKmh() const { return m_CurrentSpeedKmh; }
 
-		// returns the player location
-		inline Math::Vec2 GetActualLocation() const { return m_CurrentLocation; }
-		inline Math::Vec2 GetRelativeLocation() const { return m_CurrentLocation - m_OriginLocation; }
-
 		// returns the player lap percentage
 		inline float GetLapPercentage() const { return m_CurrentLapPercentage; }
 
 		// returns the current completed laps
 		inline int GetCompletedLaps() const { return m_CurrentCompletedLaps; }
 
-		// returns the last sector time
-		inline int GetLastSectorTime() const { return m_LastSectorTime; }
+		// returns the last sector time in seconds
+		inline float GetLastSectorTime() const { return m_LastSectorTime; }
 
-		// returns the current best time
-		inline int GetBestTime() const { return m_CurrentBestTime; }
+		// returns the best lap time in seconds
+		inline float GetBestLapTime() const { return m_LapBestTime; }
 
-		// returns the current lap time
-		inline int GetCurrentLapTime() const { return m_CurrentTime; }
+		// returns the last lap time in seconds
+		inline float GetLastLapTime() const { return m_LastLapTime; }
+
+		// returns the current lap time in seconds
+		inline float GetCurrentLapTime() const { return m_CurrentTime; }
 
 	// Public Functions
 	public:
 		void Update(bool& validTelemetry);
 
-		void SetOriginFromCurrent();
-
-	// Private Functions
 	private:
-		void RecordLap();
-
+		void StartNewLap();
+		
 	// Member variables
 	private:
 		float m_CurrentThrottle;
@@ -73,13 +69,11 @@ namespace Telemetry
 		int m_CurrentGear;
 		float m_CurrentSpeedKmh;
 
-		Math::Vec2 m_OriginLocation;
-		Math::Vec2 m_CurrentLocation;
-
 		int m_CurrentCompletedLaps;
-		int m_LastSectorTime;
-		int m_CurrentBestTime;
-		int m_CurrentTime;
+		float m_LastSectorTime;
+		float m_LastLapTime;
+		float m_LapBestTime;
+		float m_CurrentTime;
 
 		float m_LastLapPercentage;
 		float m_CurrentLapPercentage;

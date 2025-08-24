@@ -46,20 +46,23 @@ namespace ImGui
 				ImGui::Text("----NO GAME RUNNING----");
 			}
 
-			int const lapTime = telemetryReader->GetCurrentLapTime();
-			ImGui::Text("Time: %d", lapTime);
+			float const lapTime = telemetryReader->GetCurrentLapTime();
+			ImGui::Text("Time: %.3fs", lapTime);
 
-			int const bestLapTime = telemetryReader->GetBestTime();
-			ImGui::Text("Best Time: %d", bestLapTime);
+			float const lastLapTime = telemetryReader->GetLastLapTime();
+			ImGui::Text("Last Time: %.3fs", lastLapTime);
 
-			int const lastSectorTime = telemetryReader->GetLastSectorTime();
-			ImGui::Text("Last Sector Time: %d", lastSectorTime);
+			float const bestLapTime = telemetryReader->GetBestLapTime();
+			ImGui::Text("Best Time: %.3fs", bestLapTime);
+
+			float const lastSectorTime = telemetryReader->GetLastSectorTime();
+			ImGui::Text("Last Sector Time: %.3fs", lastSectorTime);
 
 			int const completedLaps = telemetryReader->GetCompletedLaps();
 			ImGui::Text("Completed Laps: %d", completedLaps);
 
 			float const lapPercentage = telemetryReader->GetLapPercentage();
-			ImGui::Text("Lap percentage: %0.1f%", lapPercentage);
+			ImGui::Text("Lap percentage: %.2f%", lapPercentage * 100.f);
 		}
 
 		void LapWindow::SetTelemetryReader(std::weak_ptr<::Telemetry::TelemetryReader> telemtryReader)

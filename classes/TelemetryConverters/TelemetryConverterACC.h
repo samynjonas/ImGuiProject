@@ -10,18 +10,6 @@ namespace Telemetry
 {
     namespace Converter 
     {
-        namespace ACC
-        {
-            namespace Maps
-            {
-                enum Enum
-                {
-                    BelgiumSpa = 0,
-                    EnumCount
-                };
-            }
-        }
-
         class TelemetryConverterACC : public TelemetryConverter 
         {
         public:
@@ -30,13 +18,11 @@ namespace Telemetry
 
             bool ReadTelemetryFromSource() override;
 
-            Math::Vec2 GetMapOrigin(ACC::Maps::Enum map) const;
         private:
-            void SetupMapOrigins();
+            bool TryConnectToGame();
+            bool IsConnectedToGame() const;
 
         private:
-            std::map<ACC::Maps::Enum, Math::Vec2> m_MapOrigins;
-
             HANDLE m_SharedMemoryHandle = nullptr;
             SPageFilePhysics* m_PhysicsData = nullptr;
 
