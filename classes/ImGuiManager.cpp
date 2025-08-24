@@ -53,7 +53,7 @@ namespace ImGui
 		IMGUI_CHECKVERSION();
 		ImGui::CreateContext();
 		ImGuiIO& io = ImGui::GetIO(); (void)io;
-
+		
 		// Setup ImGui style
 		ImGui::StyleColorsDark();
 

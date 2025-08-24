@@ -14,7 +14,13 @@ namespace Telemetry
 			float Steering{ 0.f };
 			int Gear{ 0 };
 
+			float SpeedKmh{ 0.f };
+
 			float LapPercentage{ 0.f };
+			int CompletedLaps{ 0 };
+			int LastSectorTime{ 0 };
+			int BestTime{ 0 };
+			int CurrentTime{ 0 };
 
 			Math::Vec2 Location{};
 			Math::Vec2 Origin{};

@@ -83,7 +83,9 @@ namespace Telemetry
             m_Output.Throttle = m_PhysicsData->gas;
             m_Output.Brake = m_PhysicsData->brake;
             m_Output.Steering = m_PhysicsData->steerAngle;
+
             m_Output.Gear = m_PhysicsData->gear;
+            m_Output.SpeedKmh = m_PhysicsData->speedKmh;
             
             int const id = m_GraphicsData->playerCarID;
             if (id >= 0 && id < 60) 
@@ -97,8 +99,11 @@ namespace Telemetry
                 m_Output.Location = Math::Vec2(0, 0);
             }
 
-            // Lap percentage
             m_Output.LapPercentage = m_GraphicsData->normalizedCarPosition;
+            m_Output.CompletedLaps = m_GraphicsData->completedLaps;
+            m_Output.LastSectorTime = m_GraphicsData->lastSectorTime;
+            m_Output.BestTime = m_GraphicsData->iBestTime;
+            m_Output.CurrentTime = m_GraphicsData->iCurrentTime;
 
             // Find out the current map
             ACC::Maps::Enum const currentMap = ACC::Maps::BelgiumSpa;

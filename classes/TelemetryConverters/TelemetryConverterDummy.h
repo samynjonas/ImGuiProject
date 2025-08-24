@@ -19,6 +19,8 @@ namespace Telemetry
 			float SimulateSteering() const;
 			int SimulateGear(float throttle) const;
 
+			float SimulateSpeedKmh(float throttle, float brake) const;
+
 		};
 	}
 }

@@ -22,6 +22,9 @@ namespace ImGui
 		virtual void Shutdown() = 0;
 
 	protected:
+		void DrawCenteredProgressBar(float value, const ImVec2& size);
+
+	protected:
 		std::string m_WindowName;
 
 	};

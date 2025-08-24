@@ -7,7 +7,11 @@
 #include <GLFW/glfw3.h>
 
 #include "classes/ImGuiWindowBase.h"
-#include "classes/TelemetryWindow.h"
+#include "classes/TelemetryConverters/TelemetryReader.h"
+
+#include "classes/Windows/CarInputWindow.h"
+#include "classes/Windows/CarMechanicsWindow.h"
+#include "classes/Windows/LapWindow.h"
 
 int main()
 {
@@ -32,8 +36,19 @@ int main()
 
     ImGui::ImGuiManager::Initialize(window);
 
-    std::shared_ptr<ImGui::Telemetry::TelemetryWindow> telemetryWindow = std::make_shared<ImGui::Telemetry::TelemetryWindow>("Telemetry");
-    ImGui::ImGuiManager::GetInstance().AddWindow(telemetryWindow);
+    std::shared_ptr<::Telemetry::TelemetryReader> telemetryReader = std::make_shared<::Telemetry::TelemetryReader>();
+
+    std::shared_ptr<ImGui::Telemetry::CarInputWindow> carInputWindow = std::make_shared<ImGui::Telemetry::CarInputWindow>("CarInput");
+    carInputWindow->SetTelemetryReader(telemetryReader);
+    ImGui::ImGuiManager::GetInstance().AddWindow(carInputWindow);
+
+    std::shared_ptr<ImGui::Telemetry::CarMechanicsWindow> carMechanicsWindow = std::make_shared<ImGui::Telemetry::CarMechanicsWindow>("CarMechanics");
+    carMechanicsWindow->SetTelemetryReader(telemetryReader);
+    ImGui::ImGuiManager::GetInstance().AddWindow(carMechanicsWindow);
+
+    std::shared_ptr<ImGui::Telemetry::LapWindow> LapWindow = std::make_shared<ImGui::Telemetry::LapWindow>("LapWindow");
+    LapWindow->SetTelemetryReader(telemetryReader);
+    ImGui::ImGuiManager::GetInstance().AddWindow(LapWindow);
 
     // --- MAIN LOOP ---
     while (!glfwWindowShouldClose(window))

@@ -22,6 +22,7 @@ namespace Telemetry
 			m_Output.Steering = SimulateSteering();
 
 			m_Output.Gear = SimulateGear(m_Output.Throttle);
+			m_Output.SpeedKmh = SimulateSpeedKmh(m_Output.Throttle, m_Output.Brake);
 			
 			return true;
 		}
@@ -92,6 +93,31 @@ namespace Telemetry
 				--simulatedGear;
 			}
 			return simulatedGear;
+		}
+	
+		float TelemetryConverterDummy::SimulateSpeedKmh(float throttle, float brake) const
+		{
+			float simulatedValue{ m_Output.SpeedKmh };
+
+			bool const isThrottlePressed{ throttle > 0 };
+			bool const isBrakePressed{ brake > 0 };
+			if (isThrottlePressed && !isBrakePressed)
+			{
+				// Giving Gas
+				simulatedValue += 0.01;
+			}
+			else if(!isThrottlePressed && isBrakePressed)
+			{
+				// Braking
+				simulatedValue -= 0.01;
+			}
+
+			if (simulatedValue < 0)
+			{
+				simulatedValue = 0;
+			}
+
+			return simulatedValue;
 		}
 	}
 }
