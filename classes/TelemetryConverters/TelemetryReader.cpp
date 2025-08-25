@@ -19,6 +19,9 @@ namespace Telemetry
 		, m_LapBestTime(0.f)
 		, m_LastLapTime(0.f)
 		, m_CurrentTime(0.f)
+		, m_CurrentActiveCars(0)
+		, m_PlayerIndex(0)
+		, m_CarPositions()
 	{
 		m_TelemetryWriter = std::make_unique<TelemetryWriter>();
 		m_TelemetryWriter->StartWriter();
@@ -66,6 +69,10 @@ namespace Telemetry
 		m_LapBestTime = output.BestTimeSeconds;
 		m_LastLapTime = output.LastTimeSeconds;
 		m_CurrentTime = output.CurrentTimeSeconds;
+
+		m_CurrentActiveCars = output.ActiveCars;
+		m_PlayerIndex = output.PlayerCarIndex;
+		m_CarPositions = output.CarPositions;
 		
 		m_TelemetryWriter->TryToWrite(output);
 	}

@@ -113,6 +113,21 @@ namespace Telemetry
 
             Helper::LapTime lastLapTime(m_GraphicsData->iLastTime);
             m_Output.LastTimeSeconds = lastLapTime.GetSeconds();
+
+            m_Output.ActiveCars = m_GraphicsData->activeCars;
+            m_Output.PlayerCarIndex = m_GraphicsData->playerCarID;
+
+            m_Output.CarPositions.clear();
+            for (size_t index = 0; index < m_GraphicsData->activeCars; ++index)
+            {
+                float const x = m_GraphicsData->carCoordinates[index][0];
+                //float const y = m_GraphicsData->carCoordinates[index][1];
+                float const z = m_GraphicsData->carCoordinates[index][2];
+
+                Math::Vec2 carPosition{ x, z };
+                m_Output.CarPositions.push_back(carPosition);
+            }
+
             return true;
         }
 

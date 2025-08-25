@@ -53,6 +53,15 @@ namespace Telemetry
 		// returns the current lap time in seconds
 		inline float GetCurrentLapTime() const { return m_CurrentTime; }
 
+		// returns the amount if active cars
+		inline int GetActiveCars() const { return m_CurrentActiveCars; }
+
+		// returns the index of the player car
+		inline int GetPlayerCarIndex() const { return m_PlayerIndex; }
+
+		// returns a vector of the car positions
+		inline std::vector<Math::Vec2> const& GetCarPositions() const { return m_CarPositions; }
+
 	// Public Functions
 	public:
 		void Update(bool& validTelemetry);
@@ -77,6 +86,10 @@ namespace Telemetry
 
 		float m_LastLapPercentage;
 		float m_CurrentLapPercentage;
+
+		int m_CurrentActiveCars;
+		int m_PlayerIndex;
+		std::vector<Math::Vec2> m_CarPositions;
 
 		std::unique_ptr<Converter::TelemetryConverter> m_TelemetryConverter;
 		std::unique_ptr<TelemetryWriter> m_TelemetryWriter;

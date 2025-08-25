@@ -12,6 +12,7 @@
 #include "classes/Windows/CarInputWindow.h"
 #include "classes/Windows/CarMechanicsWindow.h"
 #include "classes/Windows/LapWindow.h"
+#include "classes/Windows/MapWindow.h"
 
 int main()
 {
@@ -46,9 +47,13 @@ int main()
     carMechanicsWindow->SetTelemetryReader(telemetryReader);
     ImGui::ImGuiManager::GetInstance().AddWindow(carMechanicsWindow);
 
-    std::shared_ptr<ImGui::Telemetry::LapWindow> LapWindow = std::make_shared<ImGui::Telemetry::LapWindow>("LapWindow");
-    LapWindow->SetTelemetryReader(telemetryReader);
-    ImGui::ImGuiManager::GetInstance().AddWindow(LapWindow);
+    std::shared_ptr<ImGui::Telemetry::LapWindow> lapWindow = std::make_shared<ImGui::Telemetry::LapWindow>("LapWindow");
+    lapWindow->SetTelemetryReader(telemetryReader);
+    ImGui::ImGuiManager::GetInstance().AddWindow(lapWindow);
+
+    std::shared_ptr<ImGui::Telemetry::MapWindow> mapWindow = std::make_shared<ImGui::Telemetry::MapWindow>("MapWindow");
+    mapWindow->SetTelemetryReader(telemetryReader);
+    ImGui::ImGuiManager::GetInstance().AddWindow(mapWindow);
 
     // --- MAIN LOOP ---
     while (!glfwWindowShouldClose(window))

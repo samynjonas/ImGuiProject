@@ -1,5 +1,6 @@
 #pragma once
 #include "Math/Vector.h"
+#include <vector>
 
 namespace Telemetry
 {
@@ -24,6 +25,10 @@ namespace Telemetry
 			float CurrentTimeSeconds{ 0.f };
 		
 			int	TyresOutOfTrack{ 0 };
+
+			int ActiveCars{ 0 };
+			int PlayerCarIndex{ 0 };
+			std::vector<Math::Vec2> CarPositions;
 		};
 
 		class TelemetryConverter
