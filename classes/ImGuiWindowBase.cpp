@@ -6,7 +6,14 @@
 namespace ImGui
 {
 	ImGuiWindowBase::ImGuiWindowBase(std::string windowName)
+		: ImGuiWindowBase(windowName, {})
+	{
+
+	}
+
+	ImGuiWindowBase::ImGuiWindowBase(std::string windowName, ImGuiWindowFlags windowFlags)
 		: m_WindowName(windowName)
+		, m_WindowFlags(windowFlags)
 	{
 
 	}
@@ -18,7 +25,7 @@ namespace ImGui
 
 	void ImGuiWindowBase::SetDraw()
 	{
-		ImGui::Begin(m_WindowName.c_str());
+		ImGui::Begin(m_WindowName.c_str(), nullptr, m_WindowFlags);
 	}
 
 	void ImGuiWindowBase::UnsetDraw()
@@ -64,7 +71,13 @@ namespace ImGui
 namespace ImGui
 {
 	ImGuiWindowExample::ImGuiWindowExample(std::string windowName)
-		: ImGuiWindowBase(windowName)
+		: ImGuiWindowBase(windowName, {})
+	{
+
+	}
+
+	ImGuiWindowExample::ImGuiWindowExample(std::string windowName, ImGuiWindowFlags windowFlags)
+		: ImGuiWindowBase(windowName, windowFlags)
 	{
 
 	}

@@ -33,7 +33,7 @@ namespace Telemetry
 		inline int GetGear() const { return m_CurrentGear; }
 
 		// returns the current speed in kmh
-		inline int GetSpeedKmh() const { return m_CurrentSpeedKmh; }
+		inline float GetSpeedKmh() const { return m_CurrentSpeedKmh; }
 
 		// returns the player lap percentage
 		inline float GetLapPercentage() const { return m_CurrentLapPercentage; }

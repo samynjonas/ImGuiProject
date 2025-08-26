@@ -12,6 +12,7 @@ namespace ImGui
 	{
 	public:
 		ImGuiWindowBase(std::string windowName);
+		ImGuiWindowBase(std::string windowName, ImGuiWindowFlags windowFlags);
 		virtual ~ImGuiWindowBase();
 
 		void SetDraw();
@@ -26,6 +27,7 @@ namespace ImGui
 
 	protected:
 		std::string m_WindowName;
+		ImGuiWindowFlags m_WindowFlags;
 
 	};
 
@@ -33,6 +35,7 @@ namespace ImGui
 	{
 	public:
 		ImGuiWindowExample(std::string windowName);
+		ImGuiWindowExample(std::string windowName, ImGuiWindowFlags windowFlags);
 		~ImGuiWindowExample();
 
 		void Initialise() override;

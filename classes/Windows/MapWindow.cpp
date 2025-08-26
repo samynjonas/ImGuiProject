@@ -8,7 +8,7 @@ namespace ImGui
 	namespace Telemetry
 	{
 		MapWindow::MapWindow(std::string windowName)
-			: ImGuiWindowBase(windowName)
+			: ImGuiWindowBase(windowName, ImGuiWindowFlags_MenuBar)
 			, m_TelemetryReader()
 			, m_ZoomScale(1.f)
 			, m_CenterOffset()
@@ -33,6 +33,18 @@ namespace ImGui
 
 		void MapWindow::Draw()
 		{
+			if (ImGui::BeginMenuBar())
+			{
+				if (ImGui::BeginMenu("Settings"))
+				{
+					ImGui::MenuItem("Menu");
+
+					ImGui::EndMenu();
+				}
+				ImGui::EndMenuBar();
+			}
+
+
 			std::shared_ptr<::Telemetry::TelemetryReader> telemetryReader = m_TelemetryReader.lock();
 			if (!telemetryReader)
 			{

@@ -104,12 +104,12 @@ namespace Telemetry
 			if (isThrottlePressed && !isBrakePressed)
 			{
 				// Giving Gas
-				simulatedValue += 0.01;
+				simulatedValue += 0.01f;
 			}
 			else if(!isThrottlePressed && isBrakePressed)
 			{
 				// Braking
-				simulatedValue -= 0.01;
+				simulatedValue -= 0.01f;
 			}
 
 			if (simulatedValue < 0)
