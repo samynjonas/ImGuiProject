@@ -115,7 +115,15 @@ namespace Telemetry
             m_Output.LastTimeSeconds = lastLapTime.GetSeconds();
 
             m_Output.ActiveCars = m_GraphicsData->activeCars;
-            m_Output.PlayerCarIndex = m_GraphicsData->playerCarID;
+
+            // TODO - we should improve this code
+            for (int index = 0; index < m_GraphicsData->activeCars; index++)
+            {
+                if (m_GraphicsData->carID[index] == m_GraphicsData->playerCarID)
+                {
+                    m_Output.PlayerCarIndex = index;
+                }
+            }
 
             m_Output.CarPositions.clear();
             for (size_t index = 0; index < m_GraphicsData->activeCars; ++index)

@@ -149,7 +149,7 @@ namespace ImGui
 					}
 				}
 
-				if ((isLocalPlayer && m_ToggleLocalPlayer) || (!isLocalPlayer && m_ToggleLocalPlayer))
+				if ((isLocalPlayer && m_ToggleLocalPlayer) || (!isLocalPlayer && m_ToggleOtherPlayers))
 				{
 					Math::Vec2 const& carMapLocation = GetScaledToWindowLocation(carPosition);
 
@@ -172,7 +172,7 @@ namespace ImGui
 		{
 			ImVec2 const windowPos = ImGui::GetWindowPos();
 			ImVec2 const windowSize = ImGui::GetWindowSize();
-			ImVec2 const windowCenter = { windowPos.x + windowSize.x, windowPos.y + windowSize.y };
+			ImVec2 const windowCenter = { windowPos.x + windowSize.x / 2, windowPos.y + windowSize.y / 2 };
 
 			float const scaledX = carPosition.X * m_ZoomScale;
 			float const scaledY = carPosition.Y * m_ZoomScale;
