@@ -19,7 +19,13 @@ namespace ImGui
 		void UnsetDraw();
 
 		virtual void Initialise() = 0;
-		virtual void Draw() = 0;
+
+		// This runs before the draw
+		virtual void PreDraw();
+
+		// Main frame
+		virtual void Draw() = 0;		
+
 		virtual void Shutdown() = 0;
 
 	protected:
@@ -39,7 +45,10 @@ namespace ImGui
 		~ImGuiWindowExample();
 
 		void Initialise() override;
+
+		void PreDraw() override;
 		void Draw() override;
+		
 		void Shutdown() override;
 	};
 

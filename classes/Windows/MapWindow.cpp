@@ -31,19 +31,51 @@ namespace ImGui
 			std::cout << "Shutdown ImGui Telemetry Window " << m_WindowName << std::endl;
 		}
 
+		void MapWindow::PreDraw()
+		{
+			ImGuiIO& io = ImGui::GetIO();
+
+			float constexpr c_ZoomSpeed{ 0.01f };
+			m_ZoomScale += io.MouseWheel * c_ZoomSpeed;
+			if (m_ZoomScale < 0)
+			{
+				float constexpr c_MinZoomScale{ 0.00000001f };
+				m_ZoomScale = c_MinZoomScale;
+			}
+
+			if (ImGui::IsMouseDown(1))
+			{
+				float xDelta = io.MouseDelta.x;
+				float yDelta = io.MouseDelta.y;
+
+				m_CenterOffset.X += xDelta;
+				m_CenterOffset.Y += yDelta;
+			}
+		}
+
 		void MapWindow::Draw()
 		{
+			//-----
+			//SETTINGS VARIABLES
+			bool static showSettings{ false };
+			bool static toggleLocalPlayer{ true };
+			bool static toggleOtherPlayers{ true };
+			bool static toggleTrail{ true };
+
+			//-----
 			if (ImGui::BeginMenuBar())
 			{
 				if (ImGui::BeginMenu("Settings"))
 				{
-					ImGui::MenuItem("Menu");
+					ImGui::MenuItem("Toggle Coordinates", nullptr, &showSettings);
+					ImGui::MenuItem("Toggle Local Player", nullptr, &toggleLocalPlayer);
+					ImGui::MenuItem("Toggle Other Players", nullptr, &toggleOtherPlayers);
+					ImGui::MenuItem("Toggle Trail", nullptr, &toggleTrail);
 
 					ImGui::EndMenu();
 				}
 				ImGui::EndMenuBar();
 			}
-
 
 			std::shared_ptr<::Telemetry::TelemetryReader> telemetryReader = m_TelemetryReader.lock();
 			if (!telemetryReader)
@@ -81,29 +113,38 @@ namespace ImGui
 				return;
 			}
 
-			ImGui::SliderFloat("Zoom", &m_ZoomScale, 1.f, 100.f);
-			
-			ImGui::SliderFloat("X", &m_CenterOffset.X, -1000.f, 1000.f);
-			ImGui::SliderFloat("Y", &m_CenterOffset.Y, -1000.f, 1000.f);
-
+			ImGui::Text("Scale %f", m_ZoomScale);
+			ImGui::Text("X %f", m_CenterOffset.X);
+			ImGui::Text("Y %f", m_CenterOffset.Y);
 
 			for (int index = 0; index < activeCars; ++index)
 			{
 				bool const isLocalPlayer = (index == playerIndex);
 				Math::Vec2 const carPosition = carPositions[index];
 
+				if (showSettings)
+				{
+					ImGui::Text("Player %d Positions: [%.2f, %.2f]", index, carPosition.X, carPosition.Y);
+				}
+
 				if (isLocalPlayer)
 				{
 					m_PlayerTrail.push_back(carPosition);
-					for (Math::Vec2 const& trailPoint : m_PlayerTrail)
+					if (toggleTrail)
 					{
-						Math::Vec2 const& trailMapLocation = GetScaledToWindowLocation(trailPoint);
-						ImGui::GetWindowDrawList()->AddCircleFilled({ trailMapLocation.X, trailMapLocation.Y }, 1.f, IM_COL32(255, 255, 0, 200));
+						for (Math::Vec2 const& trailPoint : m_PlayerTrail)
+						{
+							Math::Vec2 const& trailMapLocation = GetScaledToWindowLocation(trailPoint);
+							ImGui::GetWindowDrawList()->AddCircleFilled({ trailMapLocation.X, trailMapLocation.Y }, 1.f, IM_COL32(255, 255, 0, 200));
+						}
 					}
 				}
 
-				Math::Vec2 const& carMapLocation = GetScaledToWindowLocation(carPosition);
-				ImGui::GetWindowDrawList()->AddCircleFilled({ carMapLocation.X, carMapLocation.Y }, 5.f, IM_COL32(255, 0, 0, 255));
+				if ((isLocalPlayer && toggleLocalPlayer) || (!isLocalPlayer && toggleOtherPlayers))
+				{
+					Math::Vec2 const& carMapLocation = GetScaledToWindowLocation(carPosition);
+					ImGui::GetWindowDrawList()->AddCircleFilled({ carMapLocation.X, carMapLocation.Y }, 5.f, IM_COL32(255, 0, 0, 255));
+				}
 			}
 		}
 

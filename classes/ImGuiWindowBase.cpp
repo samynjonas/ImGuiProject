@@ -33,6 +33,12 @@ namespace ImGui
 		ImGui::End();
 	}
 
+	void ImGuiWindowBase::PreDraw()
+	{
+		// This is where you could do input checks
+		// You can get the input through the ImGuiIO& io = ImGui::GetIO(); call
+	}
+
 	void ImGuiWindowBase::DrawCenteredProgressBar(float value, const ImVec2& size)
 	{
 		// Clamp the input range to [-1.0, 1.0]
@@ -99,6 +105,11 @@ namespace ImGui
 
 	void ImGuiWindowExample::Draw()
 	{
-		ImGui::Text("Example ImGui Window");
+		ImGui::Text("Example ImGui Window" __FUNCTION__);
+	}
+
+	void ImGuiWindowExample::PreDraw()
+	{
+		ImGui::Text("Example ImGui Window" __FUNCTION__);
 	}
 }

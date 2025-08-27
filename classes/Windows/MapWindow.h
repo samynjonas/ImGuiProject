@@ -22,7 +22,10 @@ namespace ImGui
 			~MapWindow();
 
 			void Initialise() override;
+
+			void PreDraw() override;
 			void Draw() override;
+			
 			void Shutdown() override;
 
 			void SetTelemetryReader(std::weak_ptr<::Telemetry::TelemetryReader> telemtryReader);

@@ -86,6 +86,7 @@ namespace ImGui
 		{
 			ImGuiWindow->SetDraw();
 			
+			ImGuiWindow->PreDraw();
 			ImGuiWindow->Draw();
 
 			ImGuiWindow->UnsetDraw();
