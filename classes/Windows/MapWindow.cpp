@@ -12,6 +12,10 @@ namespace ImGui
 			, m_TelemetryReader()
 			, m_ZoomScale(1.f)
 			, m_CenterOffset()
+			, m_ToggleMapDebugging(false)
+			, m_ToggleLocalPlayer(true)
+			, m_ToggleOtherPlayers(true)
+			, m_ToggleTrail(true)
 		{
 
 		}
@@ -55,22 +59,14 @@ namespace ImGui
 
 		void MapWindow::Draw()
 		{
-			//-----
-			//SETTINGS VARIABLES
-			bool static showSettings{ false };
-			bool static toggleLocalPlayer{ true };
-			bool static toggleOtherPlayers{ true };
-			bool static toggleTrail{ true };
-
-			//-----
 			if (ImGui::BeginMenuBar())
 			{
 				if (ImGui::BeginMenu("Settings"))
 				{
-					ImGui::MenuItem("Toggle Coordinates", nullptr, &showSettings);
-					ImGui::MenuItem("Toggle Local Player", nullptr, &toggleLocalPlayer);
-					ImGui::MenuItem("Toggle Other Players", nullptr, &toggleOtherPlayers);
-					ImGui::MenuItem("Toggle Trail", nullptr, &toggleTrail);
+					ImGui::MenuItem("Toggle Map Debugging", nullptr, &m_ToggleMapDebugging);
+					ImGui::MenuItem("Toggle Local Player", nullptr, &m_ToggleLocalPlayer);
+					ImGui::MenuItem("Toggle Other Players", nullptr, &m_ToggleOtherPlayers);
+					ImGui::MenuItem("Toggle Trail", nullptr, &m_ToggleTrail);
 
 					ImGui::EndMenu();
 				}
@@ -99,6 +95,7 @@ namespace ImGui
 				return;
 			}
 
+			// PlayerCarIndex may not be the index of the player but the ID to the car(type of car)
 			int const playerIndex = telemetryReader->GetPlayerCarIndex();
 			if (playerIndex < 0 || playerIndex >= activeCars)
 			{
@@ -117,12 +114,24 @@ namespace ImGui
 			ImGui::Text("X %f", m_CenterOffset.X);
 			ImGui::Text("Y %f", m_CenterOffset.Y);
 
+			if (m_ToggleMapDebugging)
+			{
+				ImVec2 const windowPos = ImGui::GetWindowPos();
+				ImGui::Text("windowPos: [%.2f, %.2f]", windowPos.x, windowPos.y);
+
+				ImVec2 const windowSize = ImGui::GetWindowSize();
+				ImGui::Text("windowSize: [%.2f, %.2f]", windowSize.x, windowSize.y);
+
+				ImVec2 const windowCenter = { windowPos.x + (windowSize.x), windowPos.y + (windowSize.y) };
+				ImGui::Text("windowCenter: [%.2f, %.2f]", windowCenter.x, windowCenter.y);
+			}
+
 			for (int index = 0; index < activeCars; ++index)
 			{
 				bool const isLocalPlayer = (index == playerIndex);
 				Math::Vec2 const carPosition = carPositions[index];
 
-				if (showSettings)
+				if (m_ToggleMapDebugging)
 				{
 					ImGui::Text("Player %d Positions: [%.2f, %.2f]", index, carPosition.X, carPosition.Y);
 				}
@@ -130,7 +139,7 @@ namespace ImGui
 				if (isLocalPlayer)
 				{
 					m_PlayerTrail.push_back(carPosition);
-					if (toggleTrail)
+					if (m_ToggleTrail)
 					{
 						for (Math::Vec2 const& trailPoint : m_PlayerTrail)
 						{
@@ -140,9 +149,15 @@ namespace ImGui
 					}
 				}
 
-				if ((isLocalPlayer && toggleLocalPlayer) || (!isLocalPlayer && toggleOtherPlayers))
+				if ((isLocalPlayer && m_ToggleLocalPlayer) || (!isLocalPlayer && m_ToggleLocalPlayer))
 				{
 					Math::Vec2 const& carMapLocation = GetScaledToWindowLocation(carPosition);
+
+					if (m_ToggleMapDebugging)
+					{
+						ImGui::Text("Map Location Player %d Positions: [%.2f, %.2f]", index, carMapLocation.X, carMapLocation.Y);
+					}
+
 					ImGui::GetWindowDrawList()->AddCircleFilled({ carMapLocation.X, carMapLocation.Y }, 5.f, IM_COL32(255, 0, 0, 255));
 				}
 			}
@@ -153,16 +168,19 @@ namespace ImGui
 			m_TelemetryReader = telemtryReader;
 		}
 
-		Math::Vec2 const& MapWindow::GetScaledToWindowLocation(Math::Vec2 carPosition) const
+		Math::Vec2 MapWindow::GetScaledToWindowLocation(Math::Vec2 carPosition) const
 		{
-			ImVec2 static windowPos = ImGui::GetWindowPos();
-			ImVec2 static windowSize = ImGui::GetWindowSize();
-			ImVec2 static windowCenter = { windowPos.x + windowSize.x / 2.f, windowPos.y + windowSize.y / 2.f };
+			ImVec2 const windowPos = ImGui::GetWindowPos();
+			ImVec2 const windowSize = ImGui::GetWindowSize();
+			ImVec2 const windowCenter = { windowPos.x + windowSize.x, windowPos.y + windowSize.y };
 
 			float const scaledX = carPosition.X * m_ZoomScale;
 			float const scaledY = carPosition.Y * m_ZoomScale;
 
-			return { windowCenter.x + m_CenterOffset.X + scaledX, windowCenter.y + m_CenterOffset.Y + scaledY };
+			float const mapPositionX = windowCenter.x + m_CenterOffset.X + scaledX;
+			float const mapPositionY = windowCenter.y + m_CenterOffset.Y + scaledY;
+
+			return { mapPositionX, mapPositionY };
 		}
 	}
 }

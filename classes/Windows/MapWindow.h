@@ -31,7 +31,7 @@ namespace ImGui
 			void SetTelemetryReader(std::weak_ptr<::Telemetry::TelemetryReader> telemtryReader);
 
 		private:
-			Math::Vec2 const& GetScaledToWindowLocation(Math::Vec2 carPosition) const;
+			Math::Vec2 GetScaledToWindowLocation(Math::Vec2 carPosition) const;
 
 		private:
 			std::weak_ptr<::Telemetry::TelemetryReader> m_TelemetryReader;
@@ -39,6 +39,11 @@ namespace ImGui
 			float m_ZoomScale;
 			Math::Vec2 m_CenterOffset;
 			std::vector<Math::Vec2> m_PlayerTrail;
+		
+			bool m_ToggleMapDebugging;
+			bool m_ToggleLocalPlayer;
+			bool m_ToggleOtherPlayers;
+			bool m_ToggleTrail;
 		};
 	}
 }
