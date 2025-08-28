@@ -41,6 +41,16 @@ namespace Telemetry
 			inline DataStruct GetOutput() const { return m_Output; }
 
 		protected:
+			virtual void RefreshOnNewSession() = 0;
+			virtual void ResetSession() = 0;
+
+			virtual bool IsSessionsStarted() const = 0;
+			virtual bool IsSessionsEnded() const = 0;
+
+			virtual bool TryConnectToGame() = 0;
+			virtual bool IsConnectedToGame() const = 0;
+
+		protected:
 			DataStruct m_Output;
 		};
 	}

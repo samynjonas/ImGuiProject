@@ -19,8 +19,13 @@ namespace Telemetry
             bool ReadTelemetryFromSource() override;
 
         private:
-            bool TryConnectToGame();
-            bool IsConnectedToGame() const;
+            virtual void RefreshOnNewSession() override;
+            virtual void ResetSession() override;
+            virtual bool IsSessionsStarted() const override;
+            virtual bool IsSessionsEnded() const override;
+
+            virtual bool TryConnectToGame() override;
+            virtual bool IsConnectedToGame() const override;
 
         private:
             HANDLE m_SharedMemoryHandle = nullptr;
@@ -28,7 +33,12 @@ namespace Telemetry
 
             HANDLE m_GraphicsMemoryHandle = nullptr;
             SPageFileGraphic* m_GraphicsData = nullptr;
-        };
 
+            HANDLE m_StaticMemoryHandle = nullptr;
+            SPageFileStatic* m_StaticData = nullptr;
+
+            int m_CurrentActiveCars;
+            bool m_IsStartingNewSession;
+        };
     }
 }

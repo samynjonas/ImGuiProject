@@ -7,7 +7,9 @@ namespace Telemetry
 {
     namespace Converter 
     {
-        TelemetryConverterACC::TelemetryConverterACC() 
+        TelemetryConverterACC::TelemetryConverterACC()
+            : m_CurrentActiveCars(0)
+            , m_IsStartingNewSession(false)
         {
             
         }
@@ -69,13 +71,31 @@ namespace Telemetry
                 }
             }
 
+            // Static data
+            m_StaticMemoryHandle = OpenFileMappingA(FILE_MAP_READ, FALSE, "Local\\acpmf_static");
+            if (!m_StaticMemoryHandle)
+            {
+                std::cerr << "[ACC] Could not open shared memory: acpmf_graphics" << std::endl;
+                connected = false;
+            }
+            else
+            {
+                m_StaticData = static_cast<SPageFileStatic*>(
+                    MapViewOfFile(m_StaticMemoryHandle, FILE_MAP_READ, 0, 0, sizeof(SPageFileStatic))
+                    );
+                if (!m_StaticData)
+                {
+                    std::cerr << "[ACC] Failed to map static memory view!" << std::endl;
+                    connected = false;
+                }
+            }
+
             return connected;
         }
 
         bool TelemetryConverterACC::IsConnectedToGame() const
         {
-            // No physics data to read from
-            if (!m_PhysicsData || !m_GraphicsData)
+            if (!m_PhysicsData || !m_GraphicsData || !m_StaticData)
             {
                 return false;
             }
@@ -91,6 +111,21 @@ namespace Telemetry
                     return false;
                 }
             }
+
+            m_CurrentActiveCars = m_Output.ActiveCars;
+            m_Output.ActiveCars = m_GraphicsData->activeCars;
+
+            if (IsSessionsStarted())
+            {
+                RefreshOnNewSession();
+            }
+
+            if (IsSessionsEnded())
+            {
+                ResetSession();
+            }
+
+            
 
             m_Output.Throttle = m_PhysicsData->gas;
             m_Output.Brake = m_PhysicsData->brake;
@@ -114,17 +149,6 @@ namespace Telemetry
             Helper::LapTime lastLapTime(m_GraphicsData->iLastTime);
             m_Output.LastTimeSeconds = lastLapTime.GetSeconds();
 
-            m_Output.ActiveCars = m_GraphicsData->activeCars;
-
-            // TODO - we should improve this code
-            for (int index = 0; index < m_GraphicsData->activeCars; index++)
-            {
-                if (m_GraphicsData->carID[index] == m_GraphicsData->playerCarID)
-                {
-                    m_Output.PlayerCarIndex = index;
-                }
-            }
-
             m_Output.CarPositions.clear();
             for (size_t index = 0; index < m_GraphicsData->activeCars; ++index)
             {
@@ -137,6 +161,46 @@ namespace Telemetry
             }
 
             return true;
+        }
+
+        void TelemetryConverterACC::RefreshOnNewSession()
+        {
+            for (int index = 0; index < m_GraphicsData->activeCars; index++)
+            {
+                if (m_GraphicsData->carID[index] == m_GraphicsData->playerCarID)
+                {
+                    m_Output.PlayerCarIndex = index;
+                }
+            }
+        }
+
+        bool TelemetryConverterACC::IsSessionsStarted() const
+        {
+            int const lastPackedId = m_CurrentActiveCars;
+            int const currentActiveCarCount = IsConnectedToGame() ? m_GraphicsData->activeCars : 0;
+            if (lastPackedId < currentActiveCarCount)
+            {
+                std::cout << "SESSION STARTED DETECTED " << std::endl;
+                return true;
+            }
+            return false;
+        }
+
+        void TelemetryConverterACC::ResetSession()
+        {
+            m_Output.PlayerCarIndex = 0;
+        }
+
+        bool TelemetryConverterACC::IsSessionsEnded() const
+        {
+            int const lastPackedId = m_CurrentActiveCars;
+            int const currentActiveCarCount = IsConnectedToGame() ? m_GraphicsData->activeCars : 0;
+            if (lastPackedId > currentActiveCarCount)
+            {
+                std::cout << "SESSION ENDED DETECTED" << std::endl;
+                return true;
+            }
+            return false;
         }
 
     } // namespace Converter
