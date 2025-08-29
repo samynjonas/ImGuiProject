@@ -4,6 +4,8 @@
 #include <imgui.h>
 #include <imgui_impl_glfw.h>
 #include <imgui_impl_opengl3.h>
+
+#include <glad/glad.h>
 #include <GLFW/glfw3.h>
 
 #include "classes/ImGuiWindowBase.h"
@@ -34,6 +36,12 @@ int main()
 
     glfwMakeContextCurrent(window);
     glfwSwapInterval(1); // Enable vsync
+    
+    if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress)) 
+    {
+        fprintf(stderr, "Failed to initialize GLAD\n");
+        return -1;
+    }
 
     ImGui::ImGuiManager::Initialize(window);
 

@@ -1,7 +1,8 @@
 #include "MapWindow.h"
 
-#include "TelemetryConverters/TelemetryReader.h"
+#include "Helper/ImGuiHelpers.h"
 #include "Math/Vector.h"
+#include "TelemetryConverters/TelemetryReader.h"
 
 namespace ImGui
 {
@@ -28,11 +29,16 @@ namespace ImGui
 		void MapWindow::Initialise()
 		{
 			std::cout << "Initialise ImGui Telemetry Window " << m_WindowName << std::endl;
+			//m_MapTex = ImGui::LoadTexture2D("assets/Spa-Francorchamps.png");
 		}
 
 		void MapWindow::Shutdown()
 		{
 			std::cout << "Shutdown ImGui Telemetry Window " << m_WindowName << std::endl;
+			if (m_MapTex) 
+			{ 
+				glDeleteTextures(1, &m_MapTex); m_MapTex = 0; 
+			}
 		}
 
 		void MapWindow::PreDraw()
@@ -72,6 +78,22 @@ namespace ImGui
 				}
 				ImGui::EndMenuBar();
 			}
+						
+			//ImVec2 canvasTL = ImGui::GetCursorScreenPos();
+			//ImVec2 canvasSize = ImGui::GetContentRegionAvail();
+			//ImVec2 canvasCenter = ImVec2(canvasTL.x + canvasSize.x * 0.5f, canvasTL.y + canvasSize.y * 0.5f);
+			//
+			//ImGui::GLImageParams params;
+			//params.image = (ImTextureID)(intptr_t)m_MapTex;
+			//params.top_left = Math::Vec2(canvasTL);
+			//params.size = Math::Vec2(canvasSize);
+			//params.zoom = m_ZoomScale;
+			//params.pan = m_CenterOffset;
+			//params.flip_y = true;
+			//params.rotation = GLImageRotation::R90;
+			//
+			//bool constexpr showDebugImageOutline = true;
+			//ImGui::AddImage(params, showDebugImageOutline);
 
 			std::shared_ptr<::Telemetry::TelemetryReader> telemetryReader = m_TelemetryReader.lock();
 			if (!telemetryReader)

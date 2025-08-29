@@ -1,12 +1,11 @@
 #pragma once
-#include <GLFW/glfw3.h>
 #include <iostream>
 #include <vector>
 
+struct GLFWwindow;
 namespace ImGui
 {
 	class ImGuiWindowBase;
-
 	class ImGuiManager
 	{
 	public:

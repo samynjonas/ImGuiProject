@@ -1,7 +1,9 @@
 #pragma once
 #include "ImGuiWindowBase.h"
 
+#include "Helper/TextureLoader.h"
 #include "Math/Vector.h"
+#include <glad/glad.h>
 #include <iostream>
 #include <optional>
 #include <vector>
@@ -44,6 +46,8 @@ namespace ImGui
 			bool m_ToggleLocalPlayer;
 			bool m_ToggleOtherPlayers;
 			bool m_ToggleTrail;
+
+			GLImage m_MapTex = 0;
 		};
 	}
 }

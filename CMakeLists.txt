@@ -24,6 +24,9 @@ FetchContent_Declare(
 )
 FetchContent_MakeAvailable(imgui)
 
+# --- GLAD ---
+add_library(glad STATIC external/glad/src/glad.c)
+target_include_directories(glad PUBLIC external/glad/include)
 # --- Source Files ---
 file(GLOB_RECURSE CLASS_SOURCES
     ${CMAKE_SOURCE_DIR}/classes/*.cpp
@@ -52,10 +55,19 @@ target_include_directories(imgui_lib PUBLIC
 add_executable(ImGuiProject
     main.cpp
     ${CLASS_SOURCES}
+    ${CMAKE_SOURCE_DIR}/external/stb/stb_image.cpp
 )
+
+add_custom_command(TARGET ImGuiProject POST_BUILD
+    COMMAND ${CMAKE_COMMAND} -E copy_directory
+            ${CMAKE_SOURCE_DIR}/assets
+            $<TARGET_FILE_DIR:ImGuiProject>/assets
+)
+
 
 target_include_directories(ImGuiProject PRIVATE
     ${CMAKE_SOURCE_DIR}/classes
+    ${CMAKE_SOURCE_DIR}/external/stb
 )
 
 # --- Link Libraries ---
@@ -64,6 +76,7 @@ find_package(OpenGL REQUIRED)
 target_link_libraries(ImGuiProject
     imgui_lib
     glfw
+    glad
     OpenGL::GL
-    ws2_32  # Windows-specific socket lib
+    ws2_32
 )

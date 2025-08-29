@@ -1,4 +1,6 @@
 #pragma once
+#include <imgui.h>
+
 namespace Math
 {
 	struct Vec2
@@ -13,12 +15,22 @@ namespace Math
 			, Y{ y }
 		{}
 
+		Vec2(const ImVec2& v)
+			: X(v.x)
+			, Y(v.y)
+		{}
+
 		float X;
 		float Y;
 
 		Vec2 operator-(const Vec2& other) const
 		{
 			return Vec2(X - other.X, Y - other.Y);
+		}
+
+		operator ImVec2() const
+		{
+			return ImVec2(X, Y);
 		}
 	};
 }
